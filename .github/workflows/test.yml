@@ -1,0 +1,28 @@
+name: Test Workflow
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.17, 1.18, 1.19]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Install Dependencies
+        run: go mod tidy
+
+      - name: Run Tests
+        run: go test ./...

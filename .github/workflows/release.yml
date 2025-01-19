@@ -1,0 +1,36 @@
+name: Release Workflow
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    name: Release and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.19"
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/super_calculator:${GITHUB_REF_NAME} .
+          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/super_calculator:${GITHUB_REF_NAME}
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
