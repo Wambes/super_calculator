@@ -1,34 +1,33 @@
-name: Lint Workflow
+name: Lint Go Code
 
 on:
-  pull_request:
   push:
+  pull_request:
   workflow_dispatch:
 
 jobs:
   lint:
-    name: Lint Code
+    name: Lint Go Code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Installer Semgrep avec pip
-      - name: Install and Run Semgrep (pip)
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install semgrep
-          semgrep --config=auto .
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'  # Match the Go version in your Dockerfile (optional)
+
+      - name: Run Go Module Download
+        run: go mod download
 
       - name: Run Hadolint
         uses: hadolint/hadolint-action@v3
         with:
-          dockerfile: Dockerfile
-          
-      #- name: Run Hadolint
-       # run: |
-        #  docker run --rm -i hadolint/hadolint < Dockerfile
+          dockerfile: Dockerfile  # Path to your Dockerfile (optional, defaults to Dockerfile)
 
-      - name: Run Super-Linter
-        if: github.event_name == 'pull_request'
-        uses: github/super-linter@v4
+      - name: Run GolangCI-lint (optional)
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.49.1  # Optional version specification
+          args: '--skip misspell --skip unusedparams --deadline 10m'  # Optional arguments
