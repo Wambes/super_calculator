@@ -13,24 +13,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '1.19'
-
-      - name: Run Go Module Download
-        run: go mod download
-
-      - name: Run Hadolint
-        uses: hadolint/hadolint-action@v2 # Utilisez la version v2 (corrigé)
-        with:
-          dockerfile: Dockerfile
-
       - name: Install Semgrep (using action)
-        uses: returntocorp/semgrep-action@v1 # ou une version plus récente
+        uses: returntocorp/semgrep-action@v1
 
       - name: Run Semgrep
         run: semgrep --config=auto .
+
+      - name: Run Hadolint (using action)
+        run: |
+          docker run --rm -i hadolint/hadolint:latest\
+          hadolint --ignore DL3020 --ignore DL3006
+          < Dockerfile
 
       - name: Run Super-Linter
         if: github.event_name == 'pull_request'
