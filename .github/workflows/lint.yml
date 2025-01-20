@@ -9,16 +9,14 @@ jobs:
   lint:
     name: Lint Code
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Install and Run Semgrep
-        # Use bash to avoid the newline unexpected error
         run: |
-          curl -sL https://get.semgrep.dev/install.sh | bash
-          ./semgrep --config=p ./...
+          curl -sL https://semgrep.dev/install.sh | bash # Correct URL
+          semgrep --config=p ./... # No more ./ before semgrep. It's in the PATH now.
 
       - name: Run Hadolint
         run: |
