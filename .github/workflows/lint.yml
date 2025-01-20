@@ -13,17 +13,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Semgrep (using action)
-        uses: returntocorp/semgrep-action@v1
-
       - name: Run Semgrep
-        run: semgrep --config=auto .
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: auto
 
-      - name: Run Hadolint (using action)
+      - name: Run Hadolint
         run: |
-          docker run --rm -i hadolint/hadolint:latest\
-          hadolint --ignore DL3020 --ignore DL3006
-          < Dockerfile
+          docker run --rm -v $(pwd):/app -w /app hadolint/hadolint:latest hadolint --ignore DL3020 --ignore DL3006 Dockerfile
 
       - name: Run Super-Linter
         if: github.event_name == 'pull_request'
