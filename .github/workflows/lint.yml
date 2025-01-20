@@ -15,8 +15,8 @@ jobs:
 
       - name: Install and Run Semgrep
         run: |
-          curl -sL https://semgrep.dev/install.sh | bash # Correct URL
-          semgrep --config=p ./... # No more ./ before semgrep. It's in the PATH now.
+          curl -sL https://semgrep.dev/install | bash
+          semgrep --config=p ./...
 
       - name: Run Hadolint
         run: |
