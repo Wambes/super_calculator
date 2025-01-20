@@ -21,8 +21,13 @@ jobs:
           semgrep --config=auto .
 
       - name: Run Hadolint
-        run: |
-          docker run --rm -i hadolint/hadolint < Dockerfile
+        uses: hadolint/hadolint-action@v3
+        with:
+          dockerfile: Dockerfile
+          
+      #- name: Run Hadolint
+       # run: |
+        #  docker run --rm -i hadolint/hadolint < Dockerfile
 
       - name: Run Super-Linter
         if: github.event_name == 'pull_request'
