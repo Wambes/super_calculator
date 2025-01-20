@@ -9,19 +9,20 @@ jobs:
   lint:
     name: Lint Code
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Run Semgrep
-        run: |
-          curl -sL https://semgrep.dev/install | sh
-          ./semgrep --config=auto .
+      - name: Install Semgrep (using action)
+        uses: returntocorp/semgrep-action@v1
 
-      - name: Run Hadolint
-        run: |
-          docker run --rm -i hadolint/hadolint < Dockerfile
+      - name: Run Semgrep
+        run: semgrep --config=auto .
+
+      - name: Run Hadolint (using action)
+        uses: hadolint/hadolint-action@v3
+        with:
+          dockerfile: Dockerfile
 
       - name: Run Super-Linter
         if: github.event_name == 'pull_request'
