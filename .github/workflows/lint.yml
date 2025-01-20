@@ -13,10 +13,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install and Run Semgrep
+      # Installer Semgrep avec pip
+      - name: Install and Run Semgrep (pip)
         run: |
-          curl -sL https://semgrep.dev/install | bash
+          python3 -m pip install --upgrade pip
+          pip install semgrep
           semgrep --config=p ./...
+
+      # Alternative : Exécuter Semgrep avec Docker
+      - name: Run Semgrep with Docker (Alternative)
+        if: failure()
+        run: |
+          docker run --rm -v "$(pwd):/src" returntocorp/semgrep semgrep --config=p /src
 
       - name: Run Hadolint
         run: |
