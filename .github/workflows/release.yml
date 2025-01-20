@@ -29,8 +29,8 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/super_calculator:${GITHUB_REF_NAME} .
-          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/super_calculator:${GITHUB_REF_NAME}
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }} # Redondant, mais pour plus de clarté
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}     # Redondant, mais pour plus de clarté
