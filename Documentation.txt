@@ -1,0 +1,13 @@
+-- Docker Hub et GitHub
+
+Ici nous avons générer le token dans le Docker Hub que nous avons configurer dans le dépôt de GitHub (Setting/Secrets and Variables/Actions/New repository secret).
+GitHub Action fera le reste des vérifications et des tests avec les données qui ont été configurées.
+
+--release.yml
+
+- Ici on devait configurer la clé Docker Hub en Read/Write/Delete.
+- pour que GitHub accepte les releases, on doit activer les permissions (Read and Write Permissions) dans Setting/Actions/General.
+
+--test.yml
+
+On a juste travaillé avec la version de Go déjà configurée dans go.mod (1.19)
